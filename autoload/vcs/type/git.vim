@@ -36,7 +36,7 @@ function! s:type.repository_name()"{{{
 endfunction"}}}
 
 function! s:type.relative_path(file)"{{{
-  return fnamemodify(a:file, ':p') [len(s:type.root())+1 : -2]
+  return fnamemodify(a:file, ':p')[len(self.root())+1 : -2]
 endfunction"}}}
 
 function! s:type.current_branch()"{{{
