@@ -245,6 +245,7 @@ log([{filter}])					*vcs-feature-log()*
 	"files":	ファイル名のリストです。
 	"limit":	取得するログの最大値です。
 	"rev":		リビジョンです。
+	"offset":	取得を開始する位置を指定します。
 
 logformat({log})				*vcs-feature-logformat()*
 logformat({filter})

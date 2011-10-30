@@ -164,6 +164,23 @@ function! s:type.status(...)
   return map(status, 'get(s:mercurial_status_char, v:val, " ")')
 endfunction
 
+function! s:type.log(...)
+  let filter = get(a:000, 0, {})
+  let opts = []
+  if has_key(filter, 'limit')
+    call add(opts, '-l')
+    call add(opts, filter.limit)
+  endif
+  if has_key(filter, 'rev')
+    call add(opts, '-r')
+    call add(opts, filter.rev)
+  endif
+
+  let files = get(filter, 'files', [])
+
+  return self.run('log', opts, '--', files)
+endfunction
+
 function! vcs#type#mercurial#load()
   return copy(s:type)
 endfunction

@@ -178,6 +178,23 @@ function! s:get_status(self, files, is_unstaged)
   return map(status, 'get(s:status_char, v:val, " ")')
 endfunction
 
+function! s:type.log(...)
+  let filter = get(a:000, 0, {})
+  let opts = []
+  if has_key(filter, 'limit')
+    call add(opts, join(['-', filter.limit], ''))
+  endif
+  if has_key(filter, 'offset')
+    call add(opts, join(['--skip=', filter.offset], ''))
+  endif
+  if has_key(filter, 'rev')
+    call add(opts, filter.rev)
+  endif
+
+  let files = get(filter, 'files', [])
+
+  return self.run('log', opts, '--', files)
+endfunction
 
 function! vcs#type#git#load()
   return copy(s:type)
