@@ -181,6 +181,41 @@ function! s:type.log(...)
   return self.run('log', opts, '--', files)
 endfunction
 
+function! s:type.logformat(arg)
+  let t = type(a:arg)
+  if t == type('')
+    let log = a:arg
+  elseif t == type({})
+    let log = self.log(a:arg)
+  endif
+
+  let ret = []
+  let description_flag = 0
+  for line in split(log, '\n')
+    if line =~ '^changeset'
+      if exists('obj')
+        let obj.message = join(messages[:-3], "\n")
+        call add(ret, obj)
+      endif
+      let obj = {}
+      let messages = []
+      let description_flag = 0
+      let obj.revision = substitute(line, '^changeset:\s*', '', '')
+    elseif line =~ '^user'
+      let obj.author = substitute(line, '^user:\s*', '', '')
+    elseif line =~ '^date'
+      let obj.date = substitute(line, '^date:\s*', '', '')
+    elseif line =~ '^description'
+      let description_flag = 1
+    else
+      if description_flag
+        call add(messages, substitute(line, '^\s\+', '', ''))
+      endif
+    endif
+  endfor
+  return ret
+endfunction
+
 function! vcs#type#mercurial#load()
   return copy(s:type)
 endfunction

@@ -196,6 +196,35 @@ function! s:type.log(...)
   return self.run('log', opts, '--', files)
 endfunction
 
+function! s:type.logformat(arg)
+  let t = type(a:arg)
+  if t == type('')
+    let log = a:arg
+  elseif t == type({})
+    let log = self.log(a:arg)
+  endif
+
+  let ret = []
+  for line in split(log, '\n')
+    if line =~ '^commit'
+      if exists('obj')
+        let obj.message = join(messages, "\n")
+        call add(ret, obj)
+      endif
+      let obj = {}
+      let messages = []
+      let obj.revision = substitute(line, '^commit\s*', '', '')
+    elseif line =~ '^Author'
+      let obj.author = substitute(line, '^Author:\s*', '', '')
+    elseif line =~ '^Date'
+      let obj.date = substitute(line, '^Date:\s*', '', '')
+    elseif line =~ '^\s\+'
+      call add(messages, substitute(line, '^\s\+', '', ''))
+    endif
+  endfor
+  return ret
+endfunction
+
 function! vcs#type#git#load()
   return copy(s:type)
 endfunction

@@ -22,7 +22,7 @@ endfunction
 
 function! s:cmd.execute(type, ...)
   let log = call(a:type.log, a:000, a:type)
-  call s:openbuf.open('[vcs:log]')
+  call s:openbuf.open('[vcs:log:'.a:type.name.']')
   setlocal noreadonly
   silent % delete _
   silent 1 put =log
