@@ -16,18 +16,18 @@ let s:type = {
 
 
 function! s:type.detect(file)
-  return finddir('.hg', fnamemodify(a:file, ':p:h') . ';') != ''
+  return finddir('.hg', escape(fnamemodify(a:file, ':p:h'), ' ') . ';') != ''
 endfunction
 
 function! s:type.root(...)
   return fnamemodify(finddir('.hg',
-        \ (a:0 > 1 ? fnamemodify(a:1, ':p:h') : '') . ';'),
+        \ (a:0 > 1 ? escape(fnamemodify(a:1, ':p:h'), ' ') : '') . ';'),
   \                  ':p:h:h')
 endfunction
 
 function! s:type.repository(...)
   return fnamemodify(finddir('.hg',
-        \ (a:0 > 1 ? fnamemodify(a:1, ':p:h') : '') . ';'),
+        \ (a:0 > 1 ? escape(fnamemodify(a:1, ':p:h'), ' ') : '') . ';'),
   \                  ':p:h')
 endfunction
 

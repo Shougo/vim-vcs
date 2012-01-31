@@ -212,7 +212,7 @@ function! vcs#complete(lead, cmd, pos)  " {{{2
   let cmd = matchstr(a:cmd, '^\v.{-}V%[cs]\s+\zs.*$')[: a:pos]
   let arglist = s:parse_argline(cmd)
   let lead = empty(arglist) ? '' : arglist[-1]
-  if cmd =~# '\V' . escape(lead, '\') . '\$'
+  if len(arglist) > 0 && cmd =~# '\V' . escape(lead, '\') . '\$'
     unlet! arglist[-1]
   else
     let lead = ''
@@ -221,7 +221,7 @@ function! vcs#complete(lead, cmd, pos)  " {{{2
 
   let list = []
   if has_key(params, 'cmd')
-    if has_key(s:cmds, params.cmd)
+    if has_key(s:cmds, params.cmd) && has_key(s:cmds[params.cmd], 'complete')
       let list = s:cmds[params.cmd].complete(params.args + [lead])
     endif
 
