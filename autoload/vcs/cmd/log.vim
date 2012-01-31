@@ -27,7 +27,7 @@ function! s:cmd.execute(type, ...)
   silent % delete _
   silent 1 put =log
   silent 1 delete _
-  setlocal buftype=nofile readonly
+  setlocal buftype=nofile readonly filetype=vcs-log
 endfunction
 
 
